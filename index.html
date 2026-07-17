@@ -53,13 +53,13 @@ main{padding:14px} .section-title{font-size:23px;margin:8px 0 14px} .region-grid
     </div>
     </header>
 <div id="topbar" class="topbar">
-<button class="iconbtn" onclick="goHome()">← אזורים</button>
+<button class="iconbtn" onclick="goHome()">אזורים →</button>
 <div id="regionTitle" class="region-title"></div>
 <button class="iconbtn" onclick="openTrip()">❤️ <span id="tripCount" class="trip-count">0</span></button>
 </div>
 <main>
 <section id="home"><h2 id="homeTitle" class="section-title">יעדים</h2><div id="destinationGrid" class="region-grid"></div></section>
-<section id="baliHome" hidden><button id="destBack" class="iconbtn" onclick="goDestinations()">← יעדים</button><h2 id="baliTitle" class="section-title">Bali</h2><div id="regionGrid" class="region-grid"></div></section>
+<section id="baliHome" hidden><button id="destBack" class="iconbtn" onclick="goDestinations()">יעדים →</button><h2 id="baliTitle" class="section-title">באלי</h2><div id="regionGrid" class="region-grid"></div></section>
 <section id="regionView" hidden>
 <div id="regionIntro" class="region-intro"></div>
 <div class="filters-sticky">
@@ -107,7 +107,11 @@ function applyLanguage(){
  document.getElementById('langHe').classList.toggle('active',lang==='he');
  document.getElementById('langEn').classList.toggle('active',lang==='en');
  document.getElementById('heroSubtitle').textContent='Travel Guides';
- document.getElementById('homeTitle').textContent=txt('יעדים','Destinations'); document.getElementById('destBack').textContent=txt('← יעדים','← Destinations');
+ document.getElementById('homeTitle').textContent=txt('יעדים','Destinations');
+ document.getElementById('baliTitle').textContent=txt('באלי','Bali');
+ document.getElementById('destBack').textContent=txt('יעדים →','← Destinations');
+ const regionBack=document.querySelector('#topbar .iconbtn');
+ if(regionBack) regionBack.textContent=txt('אזורים →','← Regions'); document.getElementById('destBack').textContent=txt('← יעדים','← Destinations');
  document.getElementById('search').placeholder=txt('חיפוש מקום באזור','Search within this area');
  document.getElementById('footerText').textContent=txt('מחירים, שעות, תנאי ים ודירוגים משתנים. התמונות כרגע מייצגות את סוג המקום, עד להוספת תמונות מורשות ומדויקות לכל עסק.','Prices, opening hours, sea conditions and ratings can change. Images currently represent the type of place until accurate licensed images are added.');
  document.querySelector('#topbar .iconbtn').textContent=txt('← אזורים','← Regions');
@@ -123,8 +127,8 @@ const $=s=>document.querySelector(s);
 function esc(v){return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function renderHome(){
  const baliCount=DATA.length;
- document.getElementById('destinationGrid').innerHTML=`<button class="region-card" onclick="openDestination('Bali')"><img src="${REGIONS['Uluwatu'].image}" alt="Bali"><div class="region-info"><div class="region-name">Bali</div><div class="region-meta">${baliCount} ${txt('מקומות','places')}</div></div></button><button class="region-card" disabled style="opacity:.68"><img src="https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1000&q=80" alt="Thailand"><div class="region-info"><div class="region-name">Thailand</div><div class="region-meta">Coming Soon</div></div></button><button class="region-card" disabled style="opacity:.68"><img src="https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1000&q=80" alt="Mexico"><div class="region-info"><div class="region-name">Mexico</div><div class="region-meta">Coming Soon</div></div></button>`;
- document.getElementById('regionGrid').innerHTML=Object.entries(REGIONS).map(([name,m])=>{const meta=lang==='he'?m:REGION_EN[name];return `<button class="region-card" onclick="openRegion(${JSON.stringify(name)})"><img src="${m.image}" alt="${esc(name)}"><div class="region-info"><div class="region-name">${m.emoji} ${esc(name)}</div><div class="region-meta">${meta.days} · ${meta.tagline}</div></div></button>`}).join('')
+ document.getElementById('destinationGrid').innerHTML=`<button class="region-card" onclick="openDestination('Bali')"><img src="${REGIONS['Uluwatu'].image}" alt="${txt('באלי','Bali')}"><div class="region-info"><div class="region-name">${txt('באלי','Bali')}</div><div class="region-meta">${baliCount} ${txt('מקומות','places')}</div></div></button><button class="region-card" disabled style="opacity:.68"><img src="https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1000&q=80" alt="${txt('תאילנד','Thailand')}"><div class="region-info"><div class="region-name">${txt('תאילנד','Thailand')}</div><div class="region-meta">${txt('בקרוב','Coming Soon')}</div></div></button><button class="region-card" disabled style="opacity:.68"><img src="https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1000&q=80" alt="${txt('מקסיקו','Mexico')}"><div class="region-info"><div class="region-name">${txt('מקסיקו','Mexico')}</div><div class="region-meta">${txt('בקרוב','Coming Soon')}</div></div></button>`;
+ document.getElementById('regionGrid').innerHTML=Object.entries(REGIONS).map(([name,m])=>{const meta=lang==='he'?m:REGION_EN[name];return `<button class="region-card" data-region="${esc(name)}"><img src="${m.image}" alt="${esc(name)}"><div class="region-info"><div class="region-name">${m.emoji} ${esc(name)}</div><div class="region-meta">${meta.days} · ${meta.tagline}</div></div></button>`}).join('');document.querySelectorAll('#regionGrid [data-region]').forEach(btn=>btn.addEventListener('click',()=>openRegion(btn.dataset.region)))
 }
 function openDestination(name){if(name!=='Bali')return;document.getElementById('home').hidden=true;document.getElementById('baliHome').hidden=false;window.scrollTo(0,0)}
 function goDestinations(){document.getElementById('baliHome').hidden=true;document.getElementById('home').hidden=false;window.scrollTo(0,0)}
